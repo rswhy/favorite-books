@@ -12,7 +12,6 @@ app.use(express.json());
 const Controller = require('./controllers/controller')
 const port = 3000
 
-
 app.get('/books', Controller.allFavorite)
 app.post('/books', Controller.addFavorite)
 
