@@ -1,7 +1,64 @@
 <script>
+import { useBookStore } from "../stores/book";
+import { mapActions } from "pinia";
 
 export default {
-  props: ["book"],
+  data () {
+    return {
+      title: "",
+      authors: [],
+      imageLink: "",
+      rating: 0,
+    }
+  },
+  props: ["book", "page"],
+  methods: {
+    ...mapActions(useBookStore, ['addFavorite']),
+    async addFav () {
+      try {
+        let payload = {
+          title: this.title,
+          imageLink: this.imageLink,
+          authors: this.authors,
+          rating: this.rating,
+        }
+        this.addFavorite(payload)
+        
+      } catch (err) {
+        swal("Error", "error", "error");
+      }
+    }
+  },
+  watch: {
+    page: {
+      handler(val) {
+        if (val === "home") {
+          this.title = this.book.volumeInfo.title;
+          if (Array.isArray(this.book.volumeInfo.authors)) {
+            if ((this.book.volumeInfo.authors).length > 4) {
+              let temp = ((this.book.volumeInfo.authors).slice(0, 4))
+              temp.push("etc")
+              this.authors = temp.join(", ")
+            } else {
+              this.authors = (this.book.volumeInfo.authors).join(", ");
+            }
+          } else {
+            this.authors = "Unknown"
+          }
+          this.imageLink = this.book.volumeInfo.imageLinks.thumbnail;
+          this.rating = this.book.volumeInfo.averageRating ? this.book.volumeInfo.averageRating : 0
+
+        } else {
+          this.title = this.book.title;
+          this.authors = this.book.authors;
+          this.imageLink = this.book.imageLink;
+          this.rating = this.book.rating
+        }
+      },
+
+      immediate: true,
+    },
+  },
 };
 </script>
 
@@ -9,39 +66,37 @@ export default {
   <div class="card-book">
     <div class="small">
       <article class="book">
-        <div class="pizza-box">
+        <div class="pizza-box" style="border-bottom: darkcyan; margin-bottom: 0px; border: 0.1px solid #ece7e7; border-style: none none groove none">
           <img
-            :src="book.volumeInfo.imageLinks.thumbnail"
+            :src="imageLink"
             width="1500"
             height="1368"
             alt=""
+       
           />
+    
+          <hr/>
+          <hr/>
+          <hr/>
         </div>
+        
+          
+
         <div class="book-content">
-          <h1 class="book-title">{{ book.volumeInfo.title.length > 70 ? book.volumeInfo.title.slice(0,70) + ".." : book.volumeInfo.title }}</h1>
+          <div style="flex: 1; justify-content: center;">
+            <vue3-star-ratings style="padding: 10px;" class="book-rating" v-model="rating" starSize="15" :showControl="false" :disableClick="true" />
+          </div>
+          <h1 class="book-title">{{ title.length > 70 ? title.slice(0,70) + ".." : title }}</h1>
+            <p class="book-desc"> Authors : {{authors}}</p>
 
-          <p class="book-metadata">
-            <span class="book-rating">★★★★<span>☆</span></span>
-          </p>
 
-          <p class="book-desc"> Authors : {{ (book.volumeInfo.authors).join(", ") }}</p>
-
-          <button class="book-save" type="button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="#000000"
-            >
-              <path
-                d="M 6.0097656 2 C 4.9143111 2 4.0097656 2.9025988 4.0097656 3.9980469 L 4 22 L 12 19 L 20 22 L 20 20.556641 L 20 4 C 20 2.9069372 19.093063 2 18 2 L 6.0097656 2 z M 6.0097656 4 L 18 4 L 18 19.113281 L 12 16.863281 L 6.0019531 19.113281 L 6.0097656 4 z"
-                fill="currentColor"
-              />
-            </svg>
-            Add to Favorite
-          </button>
         </div>
+          <div style="margin-bottom: 15px; margin-left: 20px; flex: 1; justify-content: center;">
+
+            <button class="book-save" type="button" v-if="page === 'home'" @click.prevent="addFav" >
+                ❤️ Add to Favorite
+            </button>
+          </div>
       </article>
     </div>
   </div>
@@ -71,14 +126,18 @@ img {
 }
 
 .book {
-  border: 2px solid #f2f2f2;
+  border: 2px solid #ece7e7;
   border-radius: 8px;
   overflow: hidden;
 }
 
 .book-content {
   padding: 16px 32px;
-  flex: 4 1 40ch;
+  flex: 4 1 1 1;
+  align-items: center;
+  justify-items: center;
+  min-height: 250px;
+  max-height: 500px;
 }
 
 .book-tags {
@@ -99,29 +158,39 @@ img {
   margin: 0;
   font-size: 20px;
   font-family: "Roboto Slab", Helvetica, Arial, sans-serif;
+  text-align: center;
+}
+
+.book-desc {
+  margin: 0;
+  text-align: center;
 }
 
 .book-metadata {
   margin: 0;
+  flex: 1;
+  align-content: flex-start;
+  flex-direction: row;
 }
 
 .book-rating {
-  font-size: 1.2em;
-  letter-spacing: 0.05em;
-  color: var(--primary);
+  margin: 0;
+  left: 0;
+  top: 0;
+  flex: 1;
+  align-items:flex-start;
 }
 
-.book-votes {
-  font-size: 0.825em;
-  font-style: italic;
-  color: var(--lightgrey);
-}
 
 .book-save {
   display: flex;
   align-items: center;
+  align-content: center;
+  text-align: center;
+  justify-content: center;
   padding: 6px 14px 6px 12px;
   border-radius: 4px;
+  bottom: 0;
   border: 2px solid currentColor;
   color: var(--primary);
   background: none;
@@ -148,13 +217,13 @@ body {
 }
 
 .card-book {
-  height: 600px;
-  box-shadow: 5px rgb(160, 172, 176);
-
+  min-height: 700px;
+  box-shadow: 5px rgb(82, 91, 95);
 }
 
 .small {
   width: clamp(300px, 17%, 450px);
   padding: 24px;
+  min-height: 700px;
 }
 </style>

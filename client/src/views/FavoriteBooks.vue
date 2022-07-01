@@ -6,13 +6,18 @@ import { mapActions, mapState } from "pinia";
 
 export default {
   data () {
-
+    return {
+      page: "favorite"
+    }
   },
   computed: {
     ...mapState(useBookStore, ['savedBooks']),
   },
   methods: {
     ...mapActions(useBookStore, ['fetchFavorite']),
+    newTab () {
+    window.open("https://www.linkedin.com/in/ratih-sanjaya-wahyuningrum/", "_blank")
+    },
   },
   components: {
     RouterLink,
@@ -35,13 +40,7 @@ export default {
 
   <div>
     <body>
-        <!-- Navigation-->
-        <nav class="navbar navbar-light bg-light static-top">
-            <div class="container">
-                <a class="navbar-brand" href="/">Home</a>
-                <a class="btn btn-primary" href="/favorite-book">⭐ Your Favorite Book</a>
-            </div>
-        </nav>
+
         <!-- Masthead-->
         <header class="masthead">
             <div class="container position-relative">
@@ -49,7 +48,7 @@ export default {
                     <div class="col-xl-6">
                         <div class="text-center text-white">
                             <!-- Page heading-->
-                            <h1 class="mb-5" style="color:azure">Your Favorite Books</h1>
+                            <h1 class="mb-5" style="color:azure">Favorite Books</h1>
         
                         </div>
                     </div>
@@ -61,8 +60,10 @@ export default {
         <div class="container">
          <h2 class="mt-5 text-center">BOOK LIST</h2>
          <div class="card-grid">
-           <CardBox v-for="book in savedBooks" :key="book.id" :book="book"/>
+           <CardBox v-for="book in savedBooks" :key="book.id" :book="book" :page="page"/>
          </div>
+         <br/>
+         <br/>
         </div>
        
         
@@ -85,7 +86,7 @@ export default {
                     <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
                         <ul class="list-inline mb-0">
                             <li class="list-inline-item me-4">
-                                <a href="https://www.linkedin.com/in/ratih-sanjaya-wahyuningrum"><i class="bi-linkedin fs-3"></i></a>
+                                <a  onclick="newTab"><i class="bi-linkedin fs-3"></i></a>
                             </li>
                             <li class="list-inline-item me-4">
                                 <a href="https://www.twitter.com"><i class="bi-twitter fs-3"></i></a>

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../App.vue'
+import HomeView from '../views/HomePage.vue'
 import FavoriteBooks from '../views/FavoriteBooks.vue'
 
 const router = createRouter({
