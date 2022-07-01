@@ -26,7 +26,7 @@ export default {
   },
   async created() {
     try {
-      this.fetchFavorite()
+      await this.fetchFavorite()
     } catch (err) {
       const error = err.response.statusText;
       swal("Error", error, "error");
