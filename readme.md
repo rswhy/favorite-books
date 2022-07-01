@@ -1,9 +1,12 @@
 # Welcome to Favorite Book Project (Bookaholic)
 
+## Description
+
 Bookaholic is a web based application (single-page-application) that can search and provide book information from Google Book API. Visitor also can save book information and will be shown in Favorite Book page (database using MongoDB).
 
-Web deployment link : [Bookaholic](https://bookaholic-id.web.app/)
-Server deployment link : [Bookaholic (server)](https://favorite-book.herokuapp.com)
+Client deployment link : [Bookaholic](https://bookaholic-id.web.app/).
+
+Server deployment link : [Bookaholic (server)](https://favorite-book.herokuapp.com).
 
 ## Endpoints
 
@@ -12,7 +15,7 @@ List of Available Endpoints:
 - `GET /books`
 - `POST /books`
 
-## GET /books
+### GET /books
 
 **Description**
 
@@ -37,7 +40,7 @@ _200 - OK_
     ...
 ]
 ```
-## POST /books
+### POST /books
 
 **Description**
 
@@ -60,7 +63,7 @@ _201 - Created_
 },
 ```
 
-## Global Error
+### Global Error
 
 **Response**
 
